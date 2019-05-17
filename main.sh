@@ -1,7 +1,8 @@
 #!/bin/bash
 #SBATCH --account=cowusda2016
-#SBATCH --cpus-per-task=16
-#SBATCH --mem=32G
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8G
+#SBATCH --ntasks=32
 #SBATCH --time="3-00:00:00"
 
 # DEPENDENCIES:
@@ -12,7 +13,6 @@
 # Modules to load
 module load swset
 module load gcc
-module load parallel
 module load miniconda3
 module load metaxa2
 module load r
@@ -24,7 +24,7 @@ module load r
 # enough cpus to run
 echo "--^-- X: Reading FASTQ sequences..."
 find . -maxdepth 1 -name "*R1_001.fastq.gz" | \
-parallel -j 4 ./fastq-to-taxonomy.sh
+  xargs -L1 -P"$SLURM_NTASKS" srun -n1 -N1 --exclusive ./fastq-to-taxonomy.sh
 echo "--^-- X: Reading FASTQ sequences...Done!"
 
 # Compile those pesky individual taxonomic tables into a single
@@ -32,7 +32,6 @@ echo "--^-- X: Reading FASTQ sequences...Done!"
 echo "--^-- X: Compiling feature table..."
 metaxa2_dc -i *.level_7.txt -o metaxa-feature-table.tsv
 echo "--^-- X: Compiling feature table...Done!"
-
 
 # Rearrange the feature table to something QIIME likes a little bit better
 echo "--^-- X: Rearranging feature table..."
@@ -82,7 +81,7 @@ qiime diversity core-metrics \
  --i-table feature-table.qza \
  --p-sampling-depth "$RAREFACTION" \
  --m-metadata-file metadata.tsv \
- --p-n-jobs 16 \
+ --p-n-jobs 4 \
  --output-dir core-metrics-results \
  --verbose
 echo "--^-- X: Running core-metrics...Done!"
@@ -137,14 +136,15 @@ echo "--^-- X: Finding alpha-correlations...Done!"
 # Now for the tricky part: beta-diversity
 echo "--^-- X: Checking entries for beta-significance..."
 # QIIME only uses one processor for these, so we can parallelize this step
-parallel -i -a catcols.txt \
-    qiime diversity beta-group-significance \
-	  --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza \
-	  --m-metadata-file metadata.tsv \
-	  --m-metadata-column {} \
-	  --p-pairwise \
-	  --o-visualization "visualizations/bray-curtis-{}-significance.qzv" \
-	  --verbose
+cat catcols.txt | \
+  xargs -P"$SLURM_NTASKS" -I {} srun -n1 -N1 --exclusive \
+  qiime diversity beta-group-significance \
+    --i-distance-matrix core-metrics-results/bray_curtis_distance_matrix.qza \
+	--m-metadata-file metadata.tsv \
+	--m-metadata-column {} \
+	--p-pairwise \
+	--o-visualization "visualizations/bray-curtis-{}-significance.qzv" \
+	--verbose
 echo "--^-- X: Checking entries for beta-significance...Done!"
 
 echo "--^-- X: Performing ANCOM..."
@@ -157,13 +157,14 @@ qiime composition add-pseudocount \
 # Run ancom for CowID, Age, TrmtGroup
 # Once again, QIIME only uses one processor (even though this
 # is a HUGE task), so we should parallelize it for speed
-parallel -i -a catcols.txt \
-	qiime composition ancom \
-     --i-table composition-table.qza \
-	 --m-metadata-file metadata.tsv \
-     --m-metadata-column {} \
-	 --o-visualization "visualizations/ancom-{}.qzv" \
-	 --verbose
+cat catcols.txt | \
+  xargs -P"$SLURM_NTASKS" -I {} srun -n1 -N1 --exclusive \
+  qiime composition ancom \
+   --i-table composition-table.qza \
+   --m-metadata-file metadata.tsv \
+   --m-metadata-column {} \
+   --o-visualization "visualizations/ancom-{}.qzv" \
+   --verbose
 echo "--^-- X: Performing ANCOM...Done!"	 
 
 echo "All Done!"
