@@ -44,11 +44,12 @@ echo "--^-- X: Finding metadata columns..."
 Rscript ./fetchmetadata.R
 echo "--^-- X: Finding metadata columns...Done!"
 
+# Our minimum taxa count is 11123 - this will be needed for rarefaction
+MINRAREFACTION=$(<rarefaction.min.txt)
+MAXRAREFACTION=$(<rarefaction.max.txt)
+
 # Start up QIIME
 source activate qiime2
-
-# Our minimum taxa count is 11123 - this will be needed for rarefaction
-RAREFACTION=11123
 
 # Convert the feature table into BIOM format
 echo "--^-- X: Importing data..."
@@ -79,7 +80,7 @@ rm -r "core-metrics-results"
 # This is one of the few QIIME commands that can use multithreading
 qiime diversity core-metrics \
  --i-table feature-table.qza \
- --p-sampling-depth "$RAREFACTION" \
+ --p-sampling-depth "$MINRAREFACTION" \
  --m-metadata-file metadata.tsv \
  --p-n-jobs 4 \
  --output-dir core-metrics-results \
@@ -99,8 +100,17 @@ qiime taxa barplot \
  --o-visualization visualizations/barplot.qzv
 echo "--^-- X: Generating barplot...Done!"
 
- # Run alpha-diversity group significance: this will automatically include all the columns
- # Evenness first
+echo "--^-- X: Plotting rarefaction curve..."
+# Create a rarefaction curve to make sure the magic of rarefaction is valid
+qiime diversity alpha-rarefaction \
+ --i-table feature-table.qza \
+ --p-maxdepth "$MAXRAREFACTION" \
+ --m-metadata-file metadata.tsv \
+ --o-visualization visualizations/rarefaction-curve.qzv
+echo "--^-- X: Plotting rarefaction curve...Done!"
+
+# Run alpha-diversity group significance: this will automatically include all the columns
+# Evenness first
 echo "--^-- X: Finding alpha-group-significance..."
 qiime diversity alpha-group-significance \
  --i-alpha-diversity core-metrics-results/evenness_vector.qza \

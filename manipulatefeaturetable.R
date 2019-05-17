@@ -1,10 +1,10 @@
 # Read the inital feature table in
 feature_table <- read.table("metaxa-feature-table.tsv",
-							header = TRUE,
-                            sep = "\t",
-                            quote = "",
-                            strip.white = TRUE,
-							check.names = FALSE)
+							              header=TRUE,
+                            sep="\t",
+                            quote="",
+                            strip.white=TRUE,
+							              check.names=FALSE)
 
 # Get the dimensions of the table
 numSamples <- ncol(feature_table) - 1
@@ -39,6 +39,18 @@ for (i in 1:numFeatures){
 }
 feature_table$'#SampleId' <- ids
 feature_table <- feature_table[c(numSamples+2, 1:(numSamples+1))]
+
+# Find minimum and maximum rarefaction values
+numCounts <- vector(length=numSamples)
+for (i in 2:(numSamples+1)) {
+  numCounts[i-1] <- sum(feature_table[,i])
+}
+minRarefaction <- min(numCounts)
+maxRarefaction <- max(numCounts)
+write.table(minRarefaction, "rarefaction.min.txt",
+            row.names=FALSE, col.names=FALSE, quote=FALSE)
+write.table(maxRarefaction, "rarefaction.max.txt",
+            row.names=FALSE, col.names=FALSE, quote=FALSE)
 
 # Write the file out
 write.table(feature_table,
