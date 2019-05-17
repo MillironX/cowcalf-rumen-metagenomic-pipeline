@@ -164,7 +164,7 @@ qiime composition add-pseudocount \
  --i-table feature-table.qza \
  --o-composition-table composition-table.qza
 
-# Run ancom for CowID, Age, TrmtGroup
+# Run ancom for all categories in catcols
 # Once again, QIIME only uses one processor (even though this
 # is a HUGE task), so we should parallelize it for speed
 cat catcols.txt | \
@@ -175,6 +175,16 @@ cat catcols.txt | \
    --m-metadata-column {} \
    --o-visualization "visualizations/ancom-{}.qzv" \
    --verbose
-echo "--^-- X: Performing ANCOM...Done!"	 
+echo "--^-- X: Performing ANCOM...Done!"
+
+# Create category-based predictive models
+cat catcols.txt | \
+  xargs -P"$SLURM_NTASKS" -L1 srun -n1 -N1 --exclusive \
+  ./sample-classifier.sh
+
+# Create continuous predictive models
+cat numcols.txt | \
+  xargs -P"$SLURM_NTASKS" -L1 srun -n1 -N1 --exclusive \
+  ./sample-regression.sh
 
 echo "All Done!"
