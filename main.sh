@@ -104,7 +104,7 @@ echo "--^-- X: Plotting rarefaction curve..."
 # Create a rarefaction curve to make sure the magic of rarefaction is valid
 qiime diversity alpha-rarefaction \
  --i-table feature-table.qza \
- --p-maxdepth "$MAXRAREFACTION" \
+ --p-max-depth "$MAXRAREFACTION" \
  --m-metadata-file metadata.tsv \
  --o-visualization visualizations/rarefaction-curve.qzv
 echo "--^-- X: Plotting rarefaction curve...Done!"
