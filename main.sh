@@ -23,8 +23,8 @@ module load r
 # Metaxa2 uses 4 cpus, we need to make sure that each instance has
 # enough cpus to run
 echo "--^-- X: Reading FASTQ sequences..."
-find . -maxdepth 1 -0 -name "*R1_001.fastq.gz" | \
-  xargs -L1 -P"$SLURM_NTASKS" srun -n1 -N1 --exclusive ./fastq-to-taxonomy.sh
+find . -maxdepth 1 -print0 -name "*R1_001.fastq.gz" | \
+  xargs -0 -L1 -P"$SLURM_NTASKS" srun -n1 -N1 --exclusive ./fastq-to-taxonomy.sh
 echo "--^-- X: Reading FASTQ sequences...Done!"
 
 # Compile those pesky individual taxonomic tables into a single
