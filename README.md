@@ -105,12 +105,13 @@ Thomas A. Christensen II - [@MillironX](https://gab.com/MillironX)
 Project Link:
 [https://github.com/MillironX/cowcalf-rumen-metagenomic-pipline](https://github.com/MillironX/cowcalf-rumen-metagenomic-pipline)
 
-[hollinger-lab]:
-https://www.uwyo.edu/anisci/personnel-directory/wyoming-faculty-and-staff/hannah-cunningham-hollinger/index.html
-[poster]: https://millironx.com/Academia#metagenomics [arcc-servers]:
-https://www.uwyo.edu/arcc/ [slurm]: https://slurm.schedmd.com/overview.html
-[qiime2-metadata]: https://docs.qiime2.org/2019.4/tutorials/metadata/ [R]:
-https://www.r-project.org/ [metaxa2]: https://microbiology.se/software/metaxa2/
-[Miniconda]: https://conda.io/en/master/miniconda.html [conda environment]:
-https://docs.qiime2.org/2019.4/install/native/#install-qiime-2-within-a-conda-environment
+[hollinger-lab]: https://www.uwyo.edu/anisci/personnel-directory/wyoming-faculty-and-staff/hannah-cunningham-hollinger/index.html
+[poster]: https://millironx.com/Academia#metagenomics
+[arcc-servers]: https://www.uwyo.edu/arcc/
+[slurm]: https://slurm.schedmd.com/overview.html
+[qiime2-metadata]: https://docs.qiime2.org/2019.4/tutorials/metadata/
+[R]: https://www.r-project.org/
+[metaxa2]: https://microbiology.se/software/metaxa2/
+[Miniconda]: https://conda.io/en/master/miniconda.html
+[conda environment]: https://docs.qiime2.org/2019.4/install/native/#install-qiime-2-within-a-conda-environment
 [Lmod]: https://lmod.readthedocs.io/en/latest/index.html
