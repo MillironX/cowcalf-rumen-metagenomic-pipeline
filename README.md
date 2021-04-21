@@ -37,9 +37,8 @@ git clone https://github.com/MillironX/cowcalf-rumen-metagenomic-pipeline.git
 Create a directory with all forward- and reverse- read files in it, named as
 `<SAMPLEID>_R1_001.fastq.gz` for forward-reads and `<SAMPLEID>_R2_001.fastq.gz`
 for reverse-reads. Add a [QIIME2-compatible metadata file][qiime2-metadata]
-named `metadata.tsv`, text files containing the minimum and maximum rarefaction
-values names `rarefaction.min.txt` and `rarefaction.max.txt` and copy all of the
-code files into it. It should look like
+named `metadata.tsv`, and copy all of the code files into it. It should look
+like
 
 ```plaintext
 .
@@ -51,8 +50,6 @@ code files into it. It should look like
 ├── sampleN_R1_001.fastq.gz
 ├── sampleN_R2_001.fastq.gz
 ├── metadata.tsv
-├── rarefaction.min.txt
-├── rarefaction.max.txt
 ├── main.sh
 ├── fastq-to-taxonomy.sh
 ├── manipulatefeaturetable.R
