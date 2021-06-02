@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --account=cowusda2016
+#SBATCH --account=ACCOUNT
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=8G
 #SBATCH --ntasks=32

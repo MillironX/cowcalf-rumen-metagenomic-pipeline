@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --account=cowusda2016
+#SBATCH --account=ACCOUNT
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --cpus-per-task=4
@@ -14,7 +14,7 @@ R1filename=${1%}
 R2filename="${R1filename/R1/R2}"
 Samplename="${R1filename/_R1_001.fastq.gz/}"
 Samplename="${Samplename/\.\//}"
-	
+
 # Extract rRNA to files
 metaxa2 -1 "$R1filename" -2 "$R2filename" -o "$Samplename" -f q -cpu 4 \
  --summary F --graphical F --fasta F --taxonomy T

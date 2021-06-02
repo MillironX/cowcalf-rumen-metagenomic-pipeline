@@ -1,10 +1,10 @@
 # Read the inital feature table in
 feature_table <- read.table("metaxa-feature-table.tsv",
-							              header=TRUE,
+                            header=TRUE,
                             sep="\t",
                             quote="",
                             strip.white=TRUE,
-							              check.names=FALSE)
+                            check.names=FALSE)
 
 # Get the dimensions of the table
 numSamples <- ncol(feature_table) - 1
